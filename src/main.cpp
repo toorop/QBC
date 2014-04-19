@@ -2176,9 +2176,17 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
         pindexPrev = (*mi).second;
         nHeight = pindexPrev->nHeight+1;
 
-        // Check proof of work
-        if (nBits != GetNextWorkRequired(pindexPrev, this))
-            return state.DoS(100, error("AcceptBlock() : incorrect proof of work"));
+ 
+               // Check proof of work       
+
+               unsigned int nBitsNext = GetNextWorkRequired(pindexPrev, this);
+                 double n1 = ConvertBitsToDouble(nBits);
+                 double n2 = ConvertBitsToDouble(nBitsNext);
+ 
+
+                    if (abs(n1-n2) > n1*0.005) 
+                        return state.DoS(100, error("AcceptBlock() : incorrect proof of work"));
+              
 
         // Check timestamp against prev
         if (GetBlockTime() <= pindexPrev->GetMedianTimePast())
