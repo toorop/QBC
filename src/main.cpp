@@ -917,6 +917,25 @@ int CMerkleTx::GetDepthInMainChain(CBlockIndex* &pindexRet) const
     return pindexBest->nHeight - pindex->nHeight + 1;
 }
 
+double ConvertBitsToDouble(unsigned int nBits){
+    int nShift = (nBits >> 24) & 0xff;
+
+    double dDiff =
+        (double)0x0000ffff / (double)(nBits & 0x00ffffff);
+
+    while (nShift < 29)
+    {
+        dDiff *= 256.0;
+        nShift++;
+    }
+    while (nShift > 29)
+    {
+        dDiff /= 256.0;
+        nShift--;
+    }
+
+    return dDiff;
+}
 
 int CMerkleTx::GetBlocksToMaturity() const
 {
